@@ -1,40 +1,75 @@
 advent_of_code::solution!(1);
-use itertools::Itertools;
 
-fn parse_input(input: &str) -> (Vec<u32>, Vec<u32>) {
+#[derive(Debug, Eq, PartialEq)]
+enum Direction {
+    Left,
+    Right,
+}
+
+#[derive(PartialEq, Eq, Debug)]
+struct Instruction {
+    direction: Direction,
+    amount: i32,
+}
+
+fn parse_input(input: &str) -> Vec<Instruction> {
     input
         .lines()
-        .map(|l| {
-            l.split_whitespace()
-                .map(|x| x.parse::<u32>().unwrap())
-                .next_tuple()
-                .unwrap()
+        .map(|line| Instruction {
+            direction: match line.chars().next() {
+                Some('L') => Direction::Left,
+                Some('R') => Direction::Right,
+                _ => panic!("unknown direction"),
+            },
+            amount: line.chars().skip(1).collect::<String>().parse().unwrap(),
         })
-        .unzip()
+        .collect()
 }
 
-pub fn part_one(input: &str) -> Option<u32> {
-    let (mut a, mut b) = parse_input(input);
-
-    a.sort_unstable();
-    b.sort_unstable();
-
-    Some(a.iter().zip(b).map(|(a, b)| a.abs_diff(b)).sum())
+pub fn part_one(input: &str) -> Option<i32> {
+    let input = parse_input(input);
+    let (_, n) = input
+        .iter()
+        .fold((50, 0), |(acc, n), Instruction { direction, amount }| {
+            let new_acc = match direction {
+                Direction::Right => (acc + amount).rem_euclid(100),
+                Direction::Left => (acc - amount).rem_euclid(100),
+            };
+            if new_acc == 0 {
+                (new_acc, n + 1)
+            } else {
+                (new_acc, n)
+            }
+        });
+    Some(n)
 }
 
-pub fn part_two(input: &str) -> Option<u32> {
-    let (mut a, mut b) = parse_input(input);
+pub fn part_two(input: &str) -> Option<i32> {
+    let input = parse_input(input);
+    let (_, n) = input.iter().fold((50i32, 0), apply_part_2_instruction);
+    Some(n)
+}
 
-    a.sort_unstable();
-    b.sort_unstable();
+fn apply_part_2_instruction(
+    (acc, n): (i32, i32),
+    Instruction { direction, amount }: &Instruction,
+) -> (i32, i32) {
+    let mut new_acc = match direction {
+        Direction::Right => acc + amount,
+        Direction::Left => acc - amount,
+    };
 
-    let b_counts = b.iter().counts();
+    let n_rotation = if new_acc > 0 {
+        new_acc / 100
+    } else if new_acc < 0 {
+        (acc != 0) as i32 - (new_acc) / 100
+    } else {
+        1 + (new_acc) / 100
+    };
 
-    Some(
-        a.iter()
-            .map(|element| element * *b_counts.get(element).unwrap_or(&0) as u32)
-            .sum(),
-    )
+    new_acc = new_acc.rem_euclid(100);
+
+    (new_acc.rem_euclid(100), n + n_rotation)
 }
 
 #[cfg(test)]
@@ -44,12 +79,135 @@ mod tests {
     #[test]
     fn test_part_one() {
         let result = part_one(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, Some(11));
+        assert_eq!(result, Some(3));
     }
 
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, Some(31));
+        assert_eq!(result, Some(6));
+    }
+
+    #[test]
+    fn test_part_two_instruction_1() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (50, 0),
+                &Instruction {
+                    direction: Direction::Left,
+                    amount: 100,
+                }
+            ),
+            (50, 1)
+        );
+    }
+
+    #[test]
+    fn test_part_two_instruction_2() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (50, 0),
+                &Instruction {
+                    direction: Direction::Left,
+                    amount: 200,
+                }
+            ),
+            (50, 2)
+        );
+    }
+
+    #[test]
+    fn test_part_two_instruction_3() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (50, 0),
+                &Instruction {
+                    direction: Direction::Right,
+                    amount: 200,
+                }
+            ),
+            (50, 2)
+        );
+    }
+
+    #[test]
+    fn test_part_two_instruction_4() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (0, 0),
+                &Instruction {
+                    direction: Direction::Right,
+                    amount: 100,
+                }
+            ),
+            (0, 1)
+        );
+    }
+
+    #[test]
+    fn test_part_two_instruction_5() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (1, 0),
+                &Instruction {
+                    direction: Direction::Left,
+                    amount: 1,
+                }
+            ),
+            (0, 1)
+        );
+    }
+
+    #[test]
+    fn test_part_two_example_1() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (50, 0),
+                &Instruction {
+                    direction: Direction::Left,
+                    amount: 68,
+                }
+            ),
+            (82, 1)
+        );
+    }
+    #[test]
+    fn test_part_two_example_2() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (82, 1),
+                &Instruction {
+                    direction: Direction::Left,
+                    amount: 30,
+                }
+            ),
+            (52, 1)
+        );
+    }
+    #[test]
+    fn test_part_two_example_3() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (52, 1),
+                &Instruction {
+                    direction: Direction::Right,
+                    amount: 48,
+                }
+            ),
+            (0, 2)
+        );
+    }
+    #[test]
+    fn test_part_two_example_4() {
+        assert_eq!(
+            apply_part_2_instruction(
+                (0, 2),
+                &Instruction {
+                    direction: Direction::Left,
+                    amount: 5,
+                }
+            ),
+            (95, 2)
+        );
     }
 }

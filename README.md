@@ -1,6 +1,6 @@
 <img src="./.assets/christmas_ferris.png" width="164">
 
-# 🎄 Advent of Code {year}
+# 🎄 Advent of Code 2025
 
 Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.rust-lang.org/).
 
@@ -11,16 +11,10 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 
 | Day | Part 1 | Part 2 |
 | :---: | :---: | :---:  |
-| [Day 1](./src/bin/01.rs) | `95.3µs` | `139.2µs` |
-| [Day 2](./src/bin/02.rs) | `137.6µs` | `233.5µs` |
-| [Day 3](./src/bin/03.rs) | `475.1µs` | `612.7µs` |
-| [Day 4](./src/bin/04.rs) | `6.2ms` | `1.8ms` |
-| [Day 5](./src/bin/05.rs) | `460.1µs` | `549.2µs` |
-| [Day 6](./src/bin/06.rs) | `280.7µs` | `85.3ms` |
-| [Day 7](./src/bin/07.rs) | `502.5µs` | `751.7µs` |
-| [Day 8](./src/bin/08.rs) | `92.3µs` | `152.7µs` |
+| [Day 1](./src/bin/01.rs) | `244.2µs` | `270.4µs` |
+| [Day 2](./src/bin/02.rs) | `62.9ms` | `-` |
 
-**Total: 97.78ms**
+**Total: 63.41ms**
 <!--- benchmarking table --->
 
 ---
@@ -245,7 +239,7 @@ To enable it, complete the following steps:
 
 #### 1. Create a private leaderboard
 
-Go to the leaderboard page of the year you want to track and click _Private Leaderboard_. If you have not created a leaderboard yet, create one by clicking _Create It_. Your leaderboard should be accessible under `https://adventofcode.com/{year}/leaderboard/private/view/{aoc_user_id}`.
+Go to the leaderboard page of the year you want to track and click _Private Leaderboard_. If you have not created a leaderboard yet, create one by clicking _Create It_. Your leaderboard should be accessible under `https://adventofcode.com/2025/leaderboard/private/view/{aoc_user_id}`.
 
 #### 2. Set repository secrets
 
