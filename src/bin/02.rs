@@ -1,3 +1,5 @@
+use rayon::prelude::*;
+
 advent_of_code::solution!(2);
 
 #[derive(Debug, PartialEq)]
@@ -34,14 +36,51 @@ fn is_invalid(n: &u64) -> bool {
 pub fn part_one(input: &str) -> Option<u64> {
     parse_input(input).ok().map(|input| {
         input
-            .iter()
+            .par_iter()
             .map(|&(p1, p2)| (p1..=p2).filter(is_invalid).sum::<u64>())
             .sum::<u64>()
     })
 }
 
-pub fn part_two(_input: &str) -> Option<u64> {
-    None
+fn is_invalid_part_2(n: &u64) -> bool {
+    let n_str = n.to_string();
+
+    // 1..4
+    'outer: for repeating_pattern_length in 1..=(n_str.len() / 2) {
+
+        // 8 is multiple of 1 -> true
+        // 8 is multiple of 2 -> true
+        // 8 is multiple of 3 -> false
+        // 8 is multiple of 4 -> true
+        if !(n_str.len().is_multiple_of(repeating_pattern_length)) {
+            continue;
+        }
+
+        // pattern to be repeated
+        let first_segment = &n_str[0..repeating_pattern_length];
+
+        // skip if pattern is not repeated
+        for next_segment_start_index in (repeating_pattern_length..n_str.len()).step_by(repeating_pattern_length) {
+            if &n_str[next_segment_start_index..next_segment_start_index + repeating_pattern_length] != first_segment {
+                continue 'outer;
+            }
+        }
+
+        // repetition detected
+        return true;
+    }
+
+    false
+}
+
+
+pub fn part_two(input: &str) -> Option<u64> {
+    parse_input(input).ok().map(|input| {
+        input
+            .par_iter()
+            .map(|&(p1, p2)| (p1..=p2).filter(is_invalid_part_2).sum::<u64>())
+            .sum::<u64>()
+    })
 }
 
 #[cfg(test)]
@@ -55,12 +94,21 @@ mod tests {
     }
 
     #[test]
-    fn test_is_invvalid() {
+    fn test_is_invalid() {
         assert_eq!(is_invalid(&11), true);
         assert_eq!(is_invalid(&12), false);
         assert_eq!(is_invalid(&1010), true);
         assert_eq!(is_invalid(&1011), false);
         assert_eq!(is_invalid(&446446), true);
+    }
+
+    #[test]
+    fn test_is_invalid_part_2() {
+        assert_eq!(is_invalid_part_2(&11), true);
+        assert_eq!(is_invalid_part_2(&12), false);
+        assert_eq!(is_invalid_part_2(&1010), true);
+        assert_eq!(is_invalid_part_2(&1011), false);
+        assert_eq!(is_invalid_part_2(&446446), true);
     }
 
     #[test]
@@ -72,6 +120,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(4174379265));
     }
 }
