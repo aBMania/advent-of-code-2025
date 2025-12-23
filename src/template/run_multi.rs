@@ -53,8 +53,8 @@ pub enum Error {
     IO(io::Error),
 }
 
-impl From<std::io::Error> for Error {
-    fn from(e: std::io::Error) -> Self {
+impl From<io::Error> for Error {
+    fn from(e: io::Error) -> Self {
         Error::IO(e)
     }
 }
@@ -65,7 +65,7 @@ pub fn get_path_for_bin(day: Day) -> String {
 }
 
 /// All solutions live in isolated binaries.
-/// This module encapsulates interaction with these binaries, both invoking them as well as parsing the timing output.
+/// This module encapsulates interaction with these binaries, both invoking them and parsing the timing output.
 pub mod child_commands {
     use super::{get_path_for_bin, Error};
     use crate::template::Day;
@@ -105,8 +105,8 @@ pub mod child_commands {
             .stderr(Stdio::piped())
             .spawn()?;
 
-        let stdout = BufReader::new(cmd.stdout.take().ok_or(super::Error::BrokenPipe)?);
-        let stderr = BufReader::new(cmd.stderr.take().ok_or(super::Error::BrokenPipe)?);
+        let stdout = BufReader::new(cmd.stdout.take().ok_or(Error::BrokenPipe)?);
+        let stderr = BufReader::new(cmd.stderr.take().ok_or(Error::BrokenPipe)?);
 
         let mut output = vec![];
 
@@ -117,7 +117,7 @@ pub mod child_commands {
         });
 
         for line in stdout.lines() {
-            let line = line.unwrap();
+            let line = line?;
             println!("{line}");
             output.push(line);
         }
@@ -174,7 +174,7 @@ pub mod child_commands {
             .split(" samples)")
             .next()?
             .split('(')
-            .last()?
+            .next_back()?
             .split('@')
             .next()?
             .trim();

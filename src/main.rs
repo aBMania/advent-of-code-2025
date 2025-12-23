@@ -1,3 +1,4 @@
+use std::process;
 use advent_of_code::template::commands::{all, download, read, scaffold, solve, time};
 use args::{parse, AppArguments};
 
@@ -99,7 +100,7 @@ fn main() {
     match parse() {
         Err(err) => {
             eprintln!("Error: {err}");
-            std::process::exit(1);
+            process::exit(1);
         }
         Ok(args) => match args {
             AppArguments::All { release } => all::handle(release),
@@ -140,5 +141,5 @@ fn main() {
                 };
             }
         },
-    };
+    }
 }

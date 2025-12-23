@@ -1,4 +1,5 @@
-<img src="./.assets/christmas_ferris.png" width="164">
+<!--suppress CheckImageSize -->
+<img src="./.assets/christmas_ferris.png" width="164" alt="ferris with Christmas hat">
 
 # 🎄 Advent of Code 2025
 
@@ -9,10 +10,10 @@ Solutions for [Advent of Code](https://adventofcode.com/) in [Rust](https://www.
 <!--- benchmarking table --->
 ## Benchmarks
 
-| Day | Part 1 | Part 2 |
-| :---: | :---: | :---:  |
+|           Day            |  Part 1   |  Part 2   |
+|:------------------------:|:---------:|:---------:|
 | [Day 1](./src/bin/01.rs) | `241.3µs` | `270.5µs` |
-| [Day 2](./src/bin/02.rs) | `20.8ms` | `39.5ms` |
+| [Day 2](./src/bin/02.rs) | `20.8ms`  | `39.5ms`  |
 
 **Total: 60.81ms**
 <!--- benchmarking table --->
@@ -25,7 +26,7 @@ This template supports all major OS (macOS, Linux, Windows).
 
 ###  📝 Create your repository
 
-1.  Open [the template repository](https://github.com/fspoettel/advent-of-code-rust) on Github.
+1.  Open [the template repository](https://github.com/fspoettel/advent-of-code-rust) on GitHub.
 2.  Click [Use this template](https://github.com/fspoettel/advent-of-code-rust/generate) and create your repository.
 3.  Clone your repository to your computer.
 4.  If you are solving a previous year's advent of code, change the `AOC_YEAR` variable in `.cargo/config.toml` to reflect the year you are solving.
@@ -56,7 +57,7 @@ cargo scaffold <day>
 # 🎄 Type `cargo solve 01` to run your solution.
 ```
 
-Individual solutions live in the `./src/bin/` directory as separate binaries. _Inputs_ and _examples_ live in the the `./data` directory.
+Individual solutions live in the `./src/bin/` directory as separate binaries. _Inputs_ and _examples_ live in the `./data` directory.
 
 Every [solution](https://github.com/fspoettel/advent-of-code-rust/blob/main/src/template.txt) has _tests_ referencing its _example_ file in `./data/examples`. Use these tests to develop and debug your solutions against the example input. In VS Code, `rust-analyzer` will display buttons for running / debugging these unit tests above the unit test blocks.
 
@@ -233,7 +234,7 @@ Once installed, you can use the [download command](#download-input--description-
 
 ### Automatically track ⭐️ progress in the readme
 
-This template includes [a Github action](https://github.com/k2bd/advent-readme-stars) that automatically updates the readme with your advent of code progress.
+This template includes [a GitHub action](https://github.com/k2bd/advent-readme-stars) that automatically updates the readme with your advent of code progress.
 
 To enable it, complete the following steps:
 

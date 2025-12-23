@@ -11,7 +11,7 @@ const SERVER_UTC_OFFSET: i32 = -5;
 /// A valid day number of advent (i.e. an integer in range 1 to 25).
 ///
 /// # Display
-/// This value displays as a two digit number.
+/// This value displays as a two-digit number.
 ///
 /// ```
 /// # use advent_of_code::Day;
@@ -24,6 +24,7 @@ pub struct Day(u8);
 impl Day {
     /// Creates a [`Day`] from the provided value if it's in the valid range,
     /// returns [`None`] otherwise.
+    #[must_use] 
     pub fn new(day: u8) -> Option<Self> {
         if day == 0 || day > 25 {
             return None;
@@ -33,11 +34,13 @@ impl Day {
 
     // Not part of the public API
     #[doc(hidden)]
+    #[must_use] 
     pub const fn __new_unchecked(day: u8) -> Self {
         Self(day)
     }
 
     /// Converts the [`Day`] into an [`u8`].
+    #[must_use] 
     pub fn into_inner(self) -> u8 {
         self.0
     }
@@ -101,6 +104,7 @@ impl Display for DayFromStrError {
 /* -------------------------------------------------------------------------- */
 
 /// An iterator that yields every day of advent from the 1st to the 25th.
+#[must_use] 
 pub fn all_days() -> AllDays {
     AllDays::new()
 }
@@ -112,6 +116,7 @@ pub struct AllDays {
 
 impl AllDays {
     #[allow(clippy::new_without_default)]
+    #[must_use] 
     pub fn new() -> Self {
         Self { current: 1 }
     }
@@ -124,7 +129,7 @@ impl Iterator for AllDays {
         if self.current > 25 {
             return None;
         }
-        // NOTE: the iterator starts at 1 and we have verified that the value is not above 25.
+        // NOTE: the iterator starts at 1, and we have verified that the value is not above 25.
         let day = Day(self.current);
         self.current += 1;
 

@@ -119,18 +119,12 @@ impl From<&Timing> for JsonValue {
 
         map.insert(
             "part_1".into(),
-            match part_1 {
-                Some(x) => x,
-                None => JsonValue::Null,
-            },
+            part_1.unwrap_or(JsonValue::Null),
         );
 
         map.insert(
             "part_2".into(),
-            match part_2 {
-                Some(x) => x,
-                None => JsonValue::Null,
-            },
+            part_2.unwrap_or(JsonValue::Null),
         );
 
         JsonValue::Object(map)

@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 advent_of_code::solution!(1);
 
 #[derive(Debug, Eq, PartialEq)]
@@ -26,6 +28,7 @@ fn parse_input(input: &str) -> Vec<Instruction> {
         .collect()
 }
 
+#[must_use]
 pub fn part_one(input: &str) -> Option<i32> {
     let input = parse_input(input);
     let (_, n) = input
@@ -59,13 +62,12 @@ fn apply_part_2_instruction(
         Direction::Left => acc - amount,
     };
 
-    let n_rotation = if new_acc > 0 {
-        new_acc / 100
-    } else if new_acc < 0 {
-        (acc != 0) as i32 - (new_acc) / 100
-    } else {
-        1 + (new_acc) / 100
+    let n_rotation = match new_acc.cmp(&0) {
+        Ordering::Less => i32::from(acc != 0) - (new_acc) / 100,
+        Ordering::Equal => 1 + (new_acc) / 100,
+        Ordering::Greater => new_acc / 100
     };
+
 
     new_acc = new_acc.rem_euclid(100);
 

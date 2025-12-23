@@ -13,9 +13,9 @@ pub fn run_part<I: Clone, T: Display>(func: impl Fn(I) -> Option<T>, input: I, d
     let part_str = format!("Part {part}");
 
     let (result, duration, samples) =
-        run_timed(func, input, |result| print_result(result, &part_str, ""));
+        run_timed(func, input, |result| print_result(result.as_ref(), &part_str, ""));
 
-    print_result(&result, &part_str, &format_duration(&duration, samples));
+    print_result(result.as_ref(), &part_str, &format_duration(&duration, samples));
 
     if let Some(result) = result {
         submit_result(result, day, part);
@@ -43,7 +43,7 @@ fn run_timed<I: Clone, T>(
 
     hook(&result);
 
-    let run = if std::env::args().any(|x| x == "--time") {
+    let run = if env::args().any(|x| x == "--time") {
         bench(func, input, &base_time)
     } else {
         (base_time, 1)
@@ -81,7 +81,7 @@ fn bench<I: Clone, T>(func: impl Fn(I) -> T, input: I, base_time: &Duration) -> 
 fn average_duration(numbers: &[Duration]) -> u128 {
     numbers
         .iter()
-        .map(std::time::Duration::as_nanos)
+        .map(Duration::as_nanos)
         .sum::<u128>()
         / numbers.len() as u128
 }
@@ -94,7 +94,7 @@ fn format_duration(duration: &Duration, samples: u128) -> String {
     }
 }
 
-fn print_result<T: Display>(result: &Option<T>, part: &str, duration_str: &str) {
+fn print_result<T: Display>(result: Option<&T>, part: &str, duration_str: &str) {
     let is_intermediate_result = duration_str.is_empty();
 
     match result {
